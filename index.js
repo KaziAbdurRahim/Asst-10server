@@ -6,8 +6,15 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
+const allowedOrigins = ['https://chill-gamer-2fc8d.firebaseapp.com', 'https://chill-gamer-2fc8d.web.app'];
 const corsOptions = {
-  origin: 'https://chill-gamer-2fc8d.web.app', // Replace with your frontend URL
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
