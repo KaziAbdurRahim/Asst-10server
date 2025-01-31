@@ -6,7 +6,11 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'https://chill-gamer-2fc8d.web.app', // Replace with your frontend URL
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // MongoDB connection
@@ -68,33 +72,22 @@ async function run() {
     app.post('/addtofavorite', async (req, res) => {
         const favorite = req.body;
         const result = await favoriteCollection.insertOne(favorite);
-        
         res.send(result);
     });
 
     // Get all favorite games by user email
-   
     app.get('/getfavorite/:email', async (req, res) => {
         const email = req.params.email;
-        
         // Query the favoriteCollection by user email
         const query = { userEmail: email };
         const cursor = favoriteCollection.find(query);
         const favorite = await cursor.toArray();
-         // Log favorite records
-        
         // Form the gameId array and ensure correct conversion
         const gameIds = favorite.map(fav => new ObjectId(fav.movieId)); // Correctly using fav.movieId
-        
         // Query the gamesCollection using the mapped gameIds
         const games = await gamesCollection.find({ _id: { $in: gameIds } }).toArray();
-       
-        
         res.send(games);
     });
-    
-
-
 
     // Delete game from favorite for a user
     app.delete('/deletefavorite/:email/:gameId', async (req, res) => {
