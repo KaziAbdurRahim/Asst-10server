@@ -6,18 +6,23 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-const allowedOrigins = ['https://chill-gamer-2fc8d.firebaseapp.com', 'https://chill-gamer-2fc8d.web.app'];
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+// const allowedOrigins = ['https://chill-gamer-2fc8d.firebaseapp.com', 'https://chill-gamer-2fc8d.web.app'];
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   optionsSuccessStatus: 200
+// };
+app.use(cors({
+    origin: ['https://chillg-5efd9.web.app', 'https://chillg-5efd9.firebaseapp.com','http://localhost:5173'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+}));
 app.use(express.json());
 
 // MongoDB connection
